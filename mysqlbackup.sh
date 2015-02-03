@@ -41,7 +41,7 @@ AWS_S3_SYNC_DELETE_OPTION=""
 
 while getopts "$OPT_SPECS" optname
 do
-  case $optname in
+  case ${optname} in
     h) usage;;
     u) MYSQL_USERNAME="$OPTARG";;
     p)
@@ -92,14 +92,14 @@ then
 fi
 
 MYSQL_HOST="$1"
-if [ -z  $MYSQL_HOST ]
+if [ -z  ${MYSQL_HOST} ]
 then
 	echo "Mysql Host arg not found!"
 	exit 1
 fi
 
 DB_NAME="$2"
-if [ -z  $DB_NAME ]
+if [ -z  ${DB_NAME} ]
 then
 	echo "Mysql DB Name arg not found!"
 	exit 1
@@ -120,7 +120,7 @@ then
 		EXCLUDED_TABLES=""
 	else
 		BACKUP_FILENAME_POSTFIX="$BACKUP_FILENAME_POSTFIX-[$EXCLUDED_TABLES]"
-		EXCLUDED_TABLES_OPTION=`echo "$EXCLUDED_TABLES" | sed s/,/\ \-\-ignore\-table\=$DB_NAME./g`
+		EXCLUDED_TABLES_OPTION=`echo "$EXCLUDED_TABLES" | sed s/,/\ \-\-ignore\-table\=${DB_NAME}./g`
 		EXCLUDED_TABLES_OPTION=" --ignore-table=$DB_NAME.$EXCLUDED_TABLES_OPTION"
 	fi
 fi
@@ -137,9 +137,9 @@ ${MYSQL_DUMP_CMD} --single-transaction -q  -c -h ${MYSQL_HOST} -u ${MYSQL_USERNA
 
 if [ $? = 0 ]
 then
-        if [ ! -f $BACKUP_FILENAME ]
+        if [ ! -f ${BACKUP_FILENAME} ]
         then
-				echo "ERROR: Backup file not found: $BACKUP_FILE"
+				echo "ERROR: Backup file not found: ${BACKUP_FILENAME}"
                 exit 1
         fi
 
@@ -151,7 +151,7 @@ then
                 echo "aws cmd not found! AWS S3 ignored!"
                 exit 1
             fi
-            if [ -z  $AWS_PROFILE_NAME ]
+            if [ -z  ${AWS_PROFILE_NAME} ]
             then
                 echo "Aws profile name required! Please set your aws credentials with cmd \"aws configure\""
                 exit 1
